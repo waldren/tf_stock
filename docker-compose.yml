@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  tensorflow:
+    build: ./
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    volumes:
+      - ".:/app"
+      - "./notebooks:/tf/notebooks"
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - capabilities: [gpu]
