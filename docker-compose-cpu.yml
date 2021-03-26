@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  tensorflow:
+    build: 
+        context: .
+        dockerfile: Dockerfile.cpu
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    volumes:
+      - ".:/app"
+      - "./notebooks:/tf/notebooks"
+
