@@ -212,5 +212,6 @@ class PreProcessor:
         # columns.append(self.volume)
         for f in self.features:
             columns.append(f)
-        return self.df[columns]
+        # Drop any rows that do not have all the features (should drop rows = largest moving average period)
+        return self.df[columns].dropna(axis=0)
         
