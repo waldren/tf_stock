@@ -1,0 +1,31 @@
+Identify breakouts for training data
+=======================================
+1. Identify peaks
+2. Filter for only peaks of height > 50% in < 5 days
+3. Create training example
+    ./data
+        ./Symbol
+            ./Label           "breakout"
+                Breakout Date   
+                pre-chart       60 bars 
+                post-chart      10 bars
+
+1. Mark Keltner and Bollinger Bands
+2. Identify squeeze
+3. Identify if breakout
+4. Create training example
+    ./Label - breakout
+    ./Label - breakdown
+    ./Label - continue
+
+Features
+1. Major Indices (S&P, NASDAQ)
+    - Moving Average 5, 10 sma pct chg
+2. Sector Indices
+    - Moving Average 5, 10 sma pct chg
+3. Moving Averages (10, 20, 50, 100) pct chg
+4. Prior price action
+    - close pct chg
+    - Window (30)
+5. Fundamentals
+    - ?

@@ -30,7 +30,7 @@ train, validate, test = np.split(df, [int(.6*len(df)), int(.8*len(df))])
 input_width = 5
 label_width = 1
 shift = 1
-y = ['Close_pct_change_log']
+y = ['close']
 wp = data_processor.WindowGenerator(input_width, label_width, shift, train_df=train, val_df=validate, test_df=test, label_columns=y)
 
 for example_inputs, example_labels in wp.train.take(1):

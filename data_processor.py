@@ -157,27 +157,26 @@ class PreProcessor:
         self.features = []
     
     def process(self):
-        # Run the entire preprocessing process
-        #create a returns columns
-        self.create_pct_change_log(columns=[self.close])
-
-        #setup some moving averages
-        self.create_movingaverage(columns=[self.close, self.volume])
-        self.create_movingaverage(columns=[self.close], period=20, postfix='_20ma')
-        self.create_pct_change_log(columns=["{}_10ma".format(self.close),"{}_10ma".format(self.volume), "{}_20ma".format(self.close)])
-        
-        #create true ranges for 10 and 20 bars
-        self.create_true_ranges(periods=[10,20])
-
-        # create features for the high and low range percent difference
-        self.pct_diff_log(column1=self.high, column2=self.low)
-
-        # create features for the difference between close and the moving averages
-        self.pct_diff_log(column1="{}_10ma_pct_change_log".format(self.close), column2="{}_pct_change_log".format(self.close))
-        self.pct_diff_log(column1="{}_20ma_pct_change_log".format(self.close), column2="{}_pct_change_log".format(self.close))
-
-        return self.get_feature_dataframe()
+      f_df = pd.DataFrame()
+      f_df['10sma'] = self.create_moving_average(self.df[self.close], period=10)
+      f_df['10sma'] = self.log_of_pct_change(f_df['10sma'])
+      f_df['20sma'] = self.create_moving_average(self.df[self.close], period=20)
+      f_df['20sma'] = self.log_of_pct_change(f_df['20sma'])
+      f_df['50sma'] = self.create_moving_average(self.df[self.close], period=50)
+      f_df['50sma'] = self.log_of_pct_change(f_df['50sma'])
+      f_df['close'] = self.log_of_pct_change(self.df[self.close])
+      return f_df
     
+    def log_of_pct_change(self, df):
+      return np.log (1+ df.pct_change())
+
+    def create_moving_average(self, df, period):
+      return df.rolling(window=period).mean()
+
+    def create_difference(self, df1, df2):
+      return abs(df1-df2)
+
+
     def create_pct_change_log(self, columns=['open','close'], postfix='_pct_change_log'):
         for c in columns:
             f = c + postfix
