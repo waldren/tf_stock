@@ -14,7 +14,8 @@ aapl = yf.Ticker('AAPL')
 
 df = aapl.history(start='2000-01-01', end='2020-01-01')
 
-pp = data_processor.PreProcessor(df, date='Date', open='Open', high='High', low='Low', close='Close', volume='Volume')
+pp = data_processor.PreProcessor(df, date='Date', open='Open', high='High', 
+                                  low='Low', close='Close', volume='Volume')
 
 df = pp.process()
 
@@ -32,7 +33,9 @@ label_width = 1
 shift = 1
 y = ['close']
 wp = data_processor.WindowGenerator(input_width, label_width, shift, train_df=train, val_df=validate, test_df=test, label_columns=y)
-
+print("wp:")
+print(wp)
+print("============")
 for example_inputs, example_labels in wp.train.take(1):
   print(f'Inputs shape (batch, time, features): {example_inputs.shape}')
   print(f'Labels shape (batch, time, features): {example_labels.shape}')
