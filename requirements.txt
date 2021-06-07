@@ -1,2 +1,22 @@
+# data providers
 yfinance
+
+
+# technical analysis, indicator libraries
+ta
+ta-lib
+bta-lib
+pandas-ta
+tulipy
+
+# broker API libraries
+tda-api
+
+# visualization
+matplotlib
+plotly
+dash
+mplfinance
+jupyterlab
+pillow
 seaborn
