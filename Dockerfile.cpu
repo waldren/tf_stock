@@ -1,11 +1,23 @@
 FROM tensorflow/tensorflow:latest-jupyter
 ENV JUPYTER_TOKEN='easy'
-
 ADD . /app
 WORKDIR /app
 
 # Install wget to download TA-Lib
-RUN apt-get install -y wget
+# Intall libxcb1 for chromedriver
+RUN apt-get install -y wget libxcb1 libnss3 curl
+# Installing Unzip
+RUN apt-get install -yqq unzip
+
+# Download the Chrome Driver
+RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
+
+# Unzip the Chrome Driver into /usr/local/bin directory
+RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+
+# Set display port as an environment variable
+ENV DISPLAY=:9195
+
 
 # download and build TA-Lib
 RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
@@ -14,7 +26,6 @@ RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
   ./configure --prefix=/usr && \
   make && \
   make install  
-
 RUN rm -R ta-lib ta-lib-0.4.0-src.tar.gz
 
 # install popular Python packages

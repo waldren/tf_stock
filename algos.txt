@@ -9,7 +9,6 @@ Identify breakouts for training data
                 Breakout Date   
                 pre-chart       60 bars 
                 post-chart      10 bars
-
 1. Mark Keltner and Bollinger Bands
 2. Identify squeeze
 3. Identify if breakout
@@ -17,7 +16,6 @@ Identify breakouts for training data
     ./Label - breakout
     ./Label - breakdown
     ./Label - continue
-
 Features
 1. Major Indices (S&P, NASDAQ)
     - Moving Average 5, 10 sma pct chg

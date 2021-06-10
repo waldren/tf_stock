@@ -1,17 +1,14 @@
 # data providers
 yfinance
 
-
 # technical analysis, indicator libraries
 ta
 ta-lib
 bta-lib
 pandas-ta
 tulipy
-
 # broker API libraries
 tda-api
-
 # visualization
 matplotlib
 plotly
@@ -20,3 +17,10 @@ mplfinance
 jupyterlab
 pillow
 seaborn
+chromedriver-binary
+# networking
+requests
+boto3
+urllib3
+websocket-client
+websockets
