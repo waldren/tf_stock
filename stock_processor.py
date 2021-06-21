@@ -13,21 +13,22 @@ class BaseProcessor():
         self.low = low
         self.close = close
         self.volume = volume
-'''
-Processes a stock by creating the neccessary indicators to determine if the stock has been consolidating 
-    and if it has now broken out or broken down (or still consolidating)
-    * currently assumption is that the history is daily
-    data_folder = This is the folder to store the output data
-    indices = This is a list of the column names of any stock indices close values.
-    drop_nan = This enables the dropping of rows in the result where columns have NAN values (such as the first rows if a moving average is used)
-    squeeze_threshold = this is the percentage that the closes must be within to be considered consolidating
-    breakout_duration = the number of bar to calculate the percentage of close change to determine if a breakout/breakdown occurred
-    breakout_threshold = the close change percentage that the close must be >= to mark it as a breakout
-    hx_length = the number of bars before the breakout/breakdown that should be included in the samples generated
-    future_length the number of bars after the breakout/breakdown (including the breakout bar) that should be included in the samples generated
-'''
+
 class SqueezeProcessor(BaseProcessor):
-    def __init__(self, data_folder='./data', indices=['spy', 'nasdaq'], drop_nan=True,
+    '''
+    Processes a stock by creating the neccessary indicators to determine if the stock has been consolidating 
+        and if it has now broken out or broken down (or still consolidating)
+        * currently assumption is that the history is daily
+        data_folder = This is the folder to store the output data
+        indices = This is a list of the column names of any stock indices close values.
+        drop_nan = This enables the dropping of rows in the result where columns have NAN values (such as the first rows if a moving average is used)
+        squeeze_threshold = this is the percentage that the closes must be within to be considered consolidating
+        breakout_duration = the number of bar to calculate the percentage of close change to determine if a breakout/breakdown occurred
+        breakout_threshold = the close change percentage that the close must be >= to mark it as a breakout
+        hx_length = the number of bars before the breakout/breakdown that should be included in the samples generated
+        future_length the number of bars after the breakout/breakdown (including the breakout bar) that should be included in the samples generated
+    '''
+    def __init__(self, data_folder='./data', indices=[], drop_nan=True,
                 squeeze_threshold=0.025, breakout_duration=5, breakout_threshold=0.05, hx_length=40, future_length=5,
                 moav_period=20, moav_long=100, moav_short=10, keltner_multiplier=1.5, **kwargs):
         if (not os.path.exists(data_folder)):
@@ -132,6 +133,7 @@ class SqueezeProcessor(BaseProcessor):
         out_file_path = os.path.join(label_dir, filename)
         with open (out_file_path, 'wb') as handle:
             pickle.dump(sample_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
     def chart(self,df, symbol):
         print(self.date)
         fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.02)
@@ -147,3 +149,18 @@ class SqueezeProcessor(BaseProcessor):
         fig.layout.xaxis.rangeslider.visible = False
         fig.update_layout(height=600, width=800, title_text="Squeeze Scan for {}".format(symbol))
         fig.show()
+
+if __name__ == "__main__":
+    import td_db_client
+
+    # Create the client to access TDAmeritrade
+    tc = td_db_client.Client()
+
+    sp = SqueezeProcessor(date='datetime', data_folder='./data/training', breakout_threshold=0.20, breakout_duration=10, 
+                        keltner_multiplier=2.0)
+    symbol = 'AMC'
+    df = tc.get_price_daily_history(symbol)
+
+    sp_df = sp.process(df, symbol=symbol)
+
+    sp_df.to_csv('./data/stock_processor_test.csv')

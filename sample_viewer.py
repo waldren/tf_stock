@@ -1,14 +1,16 @@
-
 import pandas as pd
 import os
 import pickle
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import utils 
+
 def chart(sample_dict):
     #  {'symbol':symbol, 'history':df_hx, "future":df_future, "label":label}
     break_date = sample_dict['future'].index[0]
     df = pd.concat([sample_dict['history'], sample_dict['future']])
     _chart(df, sample_dict['symbol'], break_date)
+
 def _chart(df,symbol, break_date):
         fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.02)
         fig.add_trace( go.Candlestick(x=df.index, name=symbol, open=df['open'], high=df['high'], low=df['low'], close=df['close']), row=1, col=1)
@@ -23,10 +25,13 @@ def _chart(df,symbol, break_date):
         fig.layout.xaxis.rangeslider.visible = False
         fig.update_layout(height=600, width=800, title_text="Breakout at {}".format(break_date))
         fig.show()
+
 if __name__ == "__main__":
-    filename = './data/training/breakout/AFMD_20150309T050000.pickle'
+    filename = utils.get_random_file('/app/data/training')
+    print("Showing file: {}".format(filename))
     with open(filename, 'rb') as handle:
         s_dict = pickle.load(handle)
     print("Data:")
     print(s_dict)
     chart(s_dict)
+    
