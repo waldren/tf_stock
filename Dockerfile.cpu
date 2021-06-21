@@ -16,7 +16,7 @@ RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`cu
 RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 
 # Set display port as an environment variable
-ENV DISPLAY=:9195
+ENV DISPLAY=:99
 
 
 # download and build TA-Lib

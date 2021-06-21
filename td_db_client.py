@@ -9,8 +9,9 @@ import os
 import sys 
 # import psycopg2
 class Client:
-    def __init__(self, config=config):
+    def __init__(self, config=config, manual=False):
         self.config = config
+        self.manual = manual
         self.td = self.authenticate_tda()
         # self.conn = self.getDataBaseConnection()
         
@@ -19,10 +20,14 @@ class Client:
         try:
             return auth.client_from_token_file(self.config.TOKEN_PATH, self.config.API_KEY)
         except FileNotFoundError:
-            from selenium import webdriver
-            with webdriver.Chrome(executable_path=self.config.CHROME_DRIVER_PATH) as driver:
-                return auth.client_from_login_flow(
-                    driver, self.config.API_KEY, self.config.REDIRECT_URL, self.config.TOKEN_PATH)
+            if self.manual:
+                return auth.client_from_manual_flow(self.config.API_KEY, 
+                    self.config.REDIRECT_URL, self.config.TOKEN_PATH)
+            else:
+                from selenium import webdriver
+                with webdriver.Remote('http://selenium:4444') as driver:
+                    return auth.client_from_login_flow(
+                        driver, self.config.API_KEY, self.config.REDIRECT_URL, self.config.TOKEN_PATH)
     '''
     #Establish DB Connection
     def getDataBaseConnection(self):

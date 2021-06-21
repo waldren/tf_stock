@@ -9,6 +9,7 @@ pandas-ta
 tulipy
 # broker API libraries
 tda-api
+cryptography
 # visualization
 matplotlib
 plotly
